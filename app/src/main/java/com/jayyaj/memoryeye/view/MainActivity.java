@@ -11,19 +11,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jayyaj.memoryeye.R;
 
 public class MainActivity extends FragmentActivity {
-    final Fragment fragment2 = new CameraFragment();
-    final Fragment fragment3 = new MemoriesFragment();
-    final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = fragment2;
+    private final Fragment cameraFragment = new CameraFragment();
+    private final Fragment memoriesFragment = new MemoriesFragment();
+    private Fragment active = cameraFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fm.beginTransaction().add(R.id.contentArea, fragment3, "3").hide(fragment3).commit();
-        fm.beginTransaction().add(R.id.contentArea, fragment2, "2").hide(fragment2).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, memoriesFragment).hide(memoriesFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, cameraFragment).hide(cameraFragment).commit();
 
+        active = onFragmentSwitch(cameraFragment, active);
 
         BottomNavigationView bottomNavigationView =
                 findViewById(R.id.bottom_navigation);
@@ -31,18 +31,19 @@ public class MainActivity extends FragmentActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.eye_nav_button:
-                    findViewById(R.id.memoriesFragment).setVisibility(View.GONE);
-                    fm.beginTransaction().hide(active).show(fragment2).commit();
-                    active = fragment2;
+                    active = onFragmentSwitch(cameraFragment, active);
                     return true;
 
                 case R.id.memories_nav_button:
-                    findViewById(R.id.cameraFragment).setVisibility(View.GONE);
-                    fm.beginTransaction().hide(active).show(fragment3).commit();
-                    active = fragment3;
+                    active = onFragmentSwitch(memoriesFragment, active);
                     return true;
             }
             return false;
         });
+    }
+
+    private Fragment onFragmentSwitch(Fragment show, Fragment hide) {
+        getSupportFragmentManager().beginTransaction().hide(hide).show(show).commit();
+        return show;
     }
 }
