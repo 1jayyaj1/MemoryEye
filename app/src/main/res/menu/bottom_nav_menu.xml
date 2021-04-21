@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/maps_nav_button"
+        android:icon="@drawable/ic_baseline_remove_red_eye_24"
+        android:title="@string/bottom_nav_menu_camera_text"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/parks_nav_button"
+        android:icon="@drawable/ic_baseline_storage_24"
+        android:title="@string/bottom_nav_menu_memories_text"
+        app:showAsAction="ifRoom" />
+</menu>

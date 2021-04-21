@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MemoryEye</string>
+    <string name="bottom_nav_menu_memories_text">Memories</string>
+    <string name="bottom_nav_menu_camera_text">Eye</string>
 </resources>
