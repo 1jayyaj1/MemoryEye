@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.jayyaj.memoryeye.R;
 
-public class MemoryDetailsActivity extends AppCompatActivity {
+public class MemoryCreateActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_memory_details);
+        setContentView(R.layout.activity_memory_create);
     }
 }

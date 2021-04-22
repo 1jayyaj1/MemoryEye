@@ -6,4 +6,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="activity_main_button_text">Get started</string>
     <string name="activity_main_textview_text">MemoryEye</string>
+    <string name="activity_create_title">Title</string>
+    <string name="activity_create_date">Date</string>
+    <string name="activity_create_person">Person</string>
+    <string name="activity_create_object">Object</string>
+    <string name="activity_create_description">Description</string>
+    <string name="activity_create_creator">Creator</string>
+    <string name="activity_create_button_text">Create</string>
 </resources>

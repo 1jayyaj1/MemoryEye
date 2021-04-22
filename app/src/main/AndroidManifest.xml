@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoryEye">
-        <activity android:name=".view.MemoryDetailsActivity"></activity>
+        <activity android:name=".view.MemoryCreateActivity"></activity>
         <activity
             android:name=".view.HostMenuActivity"
             android:screenOrientation="portrait" />

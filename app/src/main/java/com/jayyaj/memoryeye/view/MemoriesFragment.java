@@ -44,7 +44,7 @@ public class MemoriesFragment extends Fragment {
         createMemory = view.findViewById(R.id.createMemory);
 
         createMemory.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), MemoryDetailsActivity.class));
+            startActivity(new Intent(getActivity(), MemoryCreateActivity.class));
         });
     }
 }
