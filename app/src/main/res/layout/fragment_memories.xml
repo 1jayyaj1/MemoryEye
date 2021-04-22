@@ -4,7 +4,8 @@
     android:id="@+id/memoriesFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MemoriesFragment">
+    tools:context=".view.MemoriesFragment"
+    android:background="?attr/colorOnPrimary">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
