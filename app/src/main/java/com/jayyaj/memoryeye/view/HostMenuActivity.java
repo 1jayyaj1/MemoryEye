@@ -13,7 +13,7 @@ import com.jayyaj.memoryeye.R;
 public class HostMenuActivity extends FragmentActivity {
     private final Fragment cameraFragment = new CameraFragment();
     private final Fragment memoriesFragment = new MemoriesFragment();
-    private Fragment active = cameraFragment;
+    private Fragment active;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,9 +21,9 @@ public class HostMenuActivity extends FragmentActivity {
         setContentView(R.layout.activity_host_menu);
 
         getSupportFragmentManager().beginTransaction().add(R.id.contentArea, memoriesFragment).hide(memoriesFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, cameraFragment).hide(cameraFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, cameraFragment).show(cameraFragment).commit();
 
-        active = onFragmentSwitch(cameraFragment, active);
+        active = cameraFragment;
 
         BottomNavigationView bottomNavigationView =
                 findViewById(R.id.bottom_navigation);
@@ -31,11 +31,23 @@ public class HostMenuActivity extends FragmentActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.eye_nav_button:
-                    active = onFragmentSwitch(cameraFragment, active);
+                    if (cameraFragment != active)
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.contentArea, cameraFragment)
+                                .hide(memoriesFragment)
+                                .commit();
+                        active = cameraFragment;
                     return true;
 
                 case R.id.memories_nav_button:
-                    active = onFragmentSwitch(memoriesFragment, active);
+                    if (memoriesFragment != active)
+                        getSupportFragmentManager().beginTransaction()
+                                .remove(cameraFragment)
+                                .commit();
+                        getSupportFragmentManager().beginTransaction()
+                                .show(memoriesFragment)
+                                .commit();
+                        active = memoriesFragment;
                     return true;
             }
             return false;

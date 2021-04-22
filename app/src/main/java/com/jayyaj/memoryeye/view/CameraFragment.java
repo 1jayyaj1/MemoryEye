@@ -79,6 +79,12 @@ public class CameraFragment extends Fragment {
         bindAllCameraUseCases();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        cameraProvider.unbindAll();
+    }
+
     private void bindAllCameraUseCases() {
         if (cameraProvider != null) {
             cameraProvider.unbindAll();
