@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jayyaj.memoryeye.R;
-import com.jayyaj.memoryeye.model.CameraXViewModel;
+import com.jayyaj.memoryeye.viewmodel.CameraXViewModel;
 
 public class CameraFragment extends Fragment {
 
