@@ -2,21 +2,35 @@ package com.jayyaj.memoryeye.model;
 
 import com.google.firebase.Timestamp;
 
+import java.util.List;
+
 public class Memory {
+    private String memoryId;
     private String title;
     private Timestamp date;
     private Type type;
     private String description;
     private String creator;
+    private List<String> images;
 
     public Memory() {}
 
-    public Memory(String title, Timestamp date, Type type, String description, String creator) {
+    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String creator, List<String> images) {
+        this.memoryId = memoryId;
         this.title = title;
         this.date = date;
         this.type = type;
         this.description = description;
         this.creator = creator;
+        this.images = images;
+    }
+
+    public String getMemoryId() {
+        return memoryId;
+    }
+
+    public void setMemoryId(String memoryId) {
+        this.memoryId = memoryId;
     }
 
     public String getTitle() {
@@ -57,5 +71,13 @@ public class Memory {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }
