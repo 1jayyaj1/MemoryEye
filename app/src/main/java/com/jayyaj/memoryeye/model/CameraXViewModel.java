@@ -1,4 +1,4 @@
-package com.jayyaj.memoryeye.view.model;
+package com.jayyaj.memoryeye.model;
 
 import android.app.Application;
 import android.util.Log;
