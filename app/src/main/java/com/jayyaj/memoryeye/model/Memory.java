@@ -1,5 +1,7 @@
 package com.jayyaj.memoryeye.model;
 
+import android.net.Uri;
+
 import com.google.firebase.Timestamp;
 
 import java.util.List;
@@ -11,18 +13,18 @@ public class Memory {
     private Type type;
     private String description;
     private String creator;
-    private List<String> images;
+    private List<String> imagesUrl;
 
     public Memory() {}
 
-    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String creator, List<String> images) {
+    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String creator, List<String> imagesUrl) {
         this.memoryId = memoryId;
         this.title = title;
         this.date = date;
         this.type = type;
         this.description = description;
         this.creator = creator;
-        this.images = images;
+        this.imagesUrl = imagesUrl;
     }
 
     public String getMemoryId() {
@@ -73,11 +75,11 @@ public class Memory {
         this.creator = creator;
     }
 
-    public List<String> getImages() {
-        return images;
+    public List<String> getImagesUrl() {
+        return imagesUrl;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setImagesUrl(List<String> imagesUrl) {
+        this.imagesUrl = imagesUrl;
     }
 }
