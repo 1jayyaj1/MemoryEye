@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jayyaj.memoryeye.R;
 
 public class MemoriesFragment extends Fragment {
+
     private FloatingActionButton createMemory;
 
     public MemoriesFragment() {

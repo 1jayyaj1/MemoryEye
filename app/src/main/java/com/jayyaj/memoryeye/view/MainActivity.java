@@ -4,24 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jayyaj.memoryeye.R;
 
 public class MainActivity extends AppCompatActivity {
-    private Button getStarted;
+    private Button getStartedButton;
 
     private static final String[] PERMISSIONS = new String[]{
             Manifest.permission.CAMERA,
@@ -35,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getStarted = findViewById(R.id.getStartedButton);
+        getStartedButton = findViewById(R.id.getStartedButton);
 
-        getStarted.setOnClickListener(v -> {
+        getStartedButton.setOnClickListener(v -> {
             if (hasPermission()) {
                 startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
             } else {

@@ -1,7 +1,6 @@
 package com.jayyaj.memoryeye.view;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -20,7 +19,7 @@ public class HostMenuActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_menu);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, memoriesFragment).hide(memoriesFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.contentArea, memoriesFragment).show(memoriesFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.contentArea, cameraFragment).show(cameraFragment).commit();
 
         active = cameraFragment;

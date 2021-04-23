@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1065836747796",
+    "project_id": "memoryeye-45352",
+    "storage_bucket": "memoryeye-45352.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065836747796:android:f533cb1f10dbd43dcd5b01",
+        "android_client_info": {
+          "package_name": "com.jayyaj.memoryeye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1065836747796-905b0k26bi4hdkgq228j686q21plci23.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFhi7eKtR0kMiwZ9CfWgYkr7yAlXgOuUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1065836747796-905b0k26bi4hdkgq228j686q21plci23.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,13 +5,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
-import androidx.camera.core.ViewPort;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -29,9 +26,9 @@ public class CameraFragment extends Fragment {
     @Nullable private ProcessCameraProvider cameraProvider;
     @Nullable private Preview previewUseCase;
 
-    private PreviewView previewView;
     private int lensFacing = CameraSelector.LENS_FACING_FRONT;
     private CameraSelector cameraSelector;
+    private PreviewView previewView;
 
     public CameraFragment() {
         // Required empty public constructor
@@ -57,8 +54,10 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         cameraSelector = new CameraSelector.Builder().requireLensFacing(lensFacing).build();
         previewView = view.findViewById(R.id.previewView);
+
         if (previewView == null) {
             Log.d(TAG, "previewView is null");
         }

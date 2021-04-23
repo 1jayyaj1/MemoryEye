@@ -1,6 +1,7 @@
 package com.jayyaj.memoryeye.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 
