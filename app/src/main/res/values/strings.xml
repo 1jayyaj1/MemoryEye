@@ -14,4 +14,12 @@
     <string name="activity_create_creator">Creator</string>
     <string name="activity_create_button_text">Create</string>
     <string name="activity_create_image_text">Images</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="signin_button_text">Sign in</string>
+    <string name="or_text">Or</string>
+    <string name="create_text">Sign up</string>
+    <string name="signup_button_text">Sign up</string>
+    <string name="username_hint">Username</string>
+    <string name="sign_out_text">Sign out</string>
 </resources>

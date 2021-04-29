@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.Intent;
@@ -13,9 +14,25 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.jayyaj.memoryeye.R;
+import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser currentUser;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("Users");
+
+    private CurrentUserViewModel currentUserViewModel;
+
     private Button getStartedButton;
 
     private static final String[] PERMISSIONS = new String[]{
@@ -30,11 +47,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentUserViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(CurrentUserViewModel.class);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener = firebaseAuth -> {
+            currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser != null) {
+                String currentUserId = currentUser.getUid();
+
+                collectionReference.whereEqualTo("userId", currentUserId)
+                        .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                            if (error != null) { return; }
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                    currentUserViewModel.setUsername(snapshot.getString("username"));
+                                    currentUserViewModel.setUserId(snapshot.getString("userId"));
+
+                                    startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
+                                    finish();
+                                }
+                            }
+                        });
+            } else {
+
+            }
+        };
+
         getStartedButton = findViewById(R.id.getStartedButton);
 
         getStartedButton.setOnClickListener(v -> {
             if (hasPermission()) {
-                startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
             } else {
                 requestPermission();
             }
@@ -44,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("ok", String.valueOf(requestCode));
         if (requestCode == REQUEST_CODE) {
             StringBuilder errorText = new StringBuilder();
             for (int i = 0; i < PERMISSIONS.length; i++) {
@@ -71,5 +115,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
     }
 }

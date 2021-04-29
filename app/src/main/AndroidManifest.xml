@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoryEye">
         <activity
+            android:name=".view.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SignupActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.MemoryCreateActivity"
             android:screenOrientation="portrait" />
         <activity
