@@ -20,18 +20,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.jayyaj.memoryeye.R;
+import com.jayyaj.memoryeye.usecase.AuthentificationUseCase;
 import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AuthentificationUseCase authentificationUseCase;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = db.collection("Users");
-
-    private CurrentUserViewModel currentUserViewModel;
 
     private Button getStartedButton;
 
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+
     private static final int REQUEST_CODE = 10;
 
     @Override
@@ -47,33 +46,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currentUserViewModel = new ViewModelProvider
-                .AndroidViewModelFactory(getApplication())
-                .create(CurrentUserViewModel.class);
+        authentificationUseCase = new AuthentificationUseCase(currentUser, getApplication());
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = firebaseAuth -> {
-            currentUser = firebaseAuth.getCurrentUser();
-            if (currentUser != null) {
-                String currentUserId = currentUser.getUid();
+        firebaseAuth = authentificationUseCase.getFirebaseAuth();
 
-                collectionReference.whereEqualTo("userId", currentUserId)
-                        .addSnapshotListener((queryDocumentSnapshots, error) -> {
-                            if (error != null) { return; }
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                    currentUserViewModel.setUsername(snapshot.getString("username"));
-                                    currentUserViewModel.setUserId(snapshot.getString("userId"));
+        authStateListener = authentificationUseCase.lookupUser();
 
-                                    startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
-                                    finish();
-                                }
-                            }
-                        });
-            } else {
-
-            }
-        };
+        if (firebaseAuth.getCurrentUser() != null) {
+            startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
+            finish();
+        }
 
         getStartedButton = findViewById(R.id.getStartedButton);
 
