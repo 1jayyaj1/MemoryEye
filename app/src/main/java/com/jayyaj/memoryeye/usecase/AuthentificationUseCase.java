@@ -14,7 +14,6 @@ import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AuthentificationUseCase {
-    private Application application;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -23,21 +22,11 @@ public class AuthentificationUseCase {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Users");
 
-    private CurrentUserViewModel currentUserViewModel;
-
-    public AuthentificationUseCase(FirebaseUser user,
-                                   Application app) {
-        this.currentUser = user;
-        this.application = app;
-
-        currentUserViewModel = new ViewModelProvider
-                .AndroidViewModelFactory(application)
-                .create(CurrentUserViewModel.class);
-
-        lookupUser();
+    public AuthentificationUseCase() {
+        this.currentUser = getFirebaseAuth().getCurrentUser();
     }
 
-    public FirebaseAuth.AuthStateListener lookupUser() {
+    public FirebaseAuth.AuthStateListener lookupUser(CurrentUserViewModel currentUserViewModel) {
         authStateListener = firebaseAuth -> {
             currentUser = firebaseAuth.getCurrentUser();
             if (currentUser != null) {

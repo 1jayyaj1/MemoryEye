@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
 
+    private CurrentUserViewModel currentUserViewModel;
+
     private Button getStartedButton;
 
     private static final String[] PERMISSIONS = new String[]{
@@ -46,11 +48,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        authentificationUseCase = new AuthentificationUseCase(currentUser, getApplication());
+        authentificationUseCase = new AuthentificationUseCase();
+
+        currentUserViewModel = new ViewModelProvider
+                .AndroidViewModelFactory(getApplication())
+                .create(CurrentUserViewModel.class);
 
         firebaseAuth = authentificationUseCase.getFirebaseAuth();
 
-        authStateListener = authentificationUseCase.lookupUser();
+        authStateListener = authentificationUseCase.lookupUser(currentUserViewModel);
 
         if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(MainActivity.this, HostMenuActivity.class));
