@@ -1,13 +1,5 @@
 package com.jayyaj.memoryeye.usecase;
 
-import android.app.Application;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Toast;
-
-import androidx.lifecycle.ViewModelProvider;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,11 +7,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.jayyaj.memoryeye.view.HostMenuActivity;
-import com.jayyaj.memoryeye.view.LoginActivity;
 import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class AuthentificationUseCase {
 
@@ -72,6 +64,39 @@ public class AuthentificationUseCase {
                             });
                     }
                 }).addOnFailureListener(e -> {
+        });
+    }
+
+    public Task<AuthResult> createUserEmailAccount(CurrentUserViewModel currentUserViewModel, String emailText, String passwordText, String usernameText) {
+        return firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                //We take users to the AddJournalActivity
+                currentUser = firebaseAuth.getCurrentUser();
+                assert currentUser != null;
+                String currentUserId = currentUser.getUid();
+
+                //Creating user Map to be added to collection
+                Map<String, String> userObj = new HashMap<>();
+                userObj.put("userId", currentUserId);
+                userObj.put("username", usernameText);
+
+                //Save to firestore
+                collectionReference.add(userObj).addOnSuccessListener(documentReference -> {
+                    documentReference.get().addOnCompleteListener(task1 -> {
+                        if (Objects.requireNonNull(task1.getResult()).exists()) {
+                            String name = task1.getResult().getString("username");
+
+                            currentUserViewModel.setUsername(name);
+                            currentUserViewModel.setUserId(currentUserId);
+                        } else {
+                        }
+                    }).addOnFailureListener(e -> {
+                    });
+                }).addOnFailureListener(e -> {
+                });
+            } else {
+            }
+        }).addOnFailureListener(e -> {
         });
     }
 

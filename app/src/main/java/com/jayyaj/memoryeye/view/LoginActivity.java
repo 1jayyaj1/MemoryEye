@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView email;
     private EditText password;
     private ProgressBar progressBar;
-    
+
     private CurrentUserViewModel currentUserViewModel;
 
     @Override

@@ -11,14 +11,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.jayyaj.memoryeye.R;
+import com.jayyaj.memoryeye.usecase.AuthentificationUseCase;
 import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 import com.jayyaj.memoryeye.viewmodel.MemoryViewModel;
 
@@ -27,13 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SignupActivity extends AppCompatActivity {
+
+    private AuthentificationUseCase authentificationUseCase;
+
     private static final String TAG = "SignupActivity";
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = db.collection("Users");
 
     private CurrentUserViewModel currentUserViewModel;
 
@@ -48,11 +54,13 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        authentificationUseCase = new AuthentificationUseCase();
+
         currentUserViewModel = new ViewModelProvider
                 .AndroidViewModelFactory(getApplication())
                 .create(CurrentUserViewModel.class);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = authentificationUseCase.getFirebaseAuth();
 
         username = findViewById(R.id.usernameSignup);
         email = findViewById(R.id.emailSignup);
@@ -70,18 +78,11 @@ public class SignupActivity extends AppCompatActivity {
         };
 
         signup.setOnClickListener(v -> {
-            if (!TextUtils.isEmpty(email.getText().toString())
-                    && !TextUtils.isEmpty(password.getText().toString())
-                    && !TextUtils.isEmpty(username.getText().toString())) {
+            String emailText = email.getText().toString().trim();
+            String usernameText = username.getText().toString().trim();
+            String passwordText = password.getText().toString().trim();
 
-                String emailText = email.getText().toString().trim();
-                String usernameText = username.getText().toString().trim();
-                String passwordText = password.getText().toString().trim();
-
-                createUserEmailAccount(emailText, passwordText, usernameText);
-            }else {
-                Toast.makeText(SignupActivity.this, "Fields can't be empty", Toast.LENGTH_LONG).show();
-            }
+            createUserEmailAccount(emailText, passwordText, usernameText);
         });
 
     }
@@ -89,50 +90,14 @@ public class SignupActivity extends AppCompatActivity {
     private void createUserEmailAccount(String emailText, String passwordText, String usernameText) {
         if (!TextUtils.isEmpty(emailText) && !TextUtils.isEmpty(passwordText) && !TextUtils.isEmpty(usernameText)) {
             progressBar.setVisibility(View.VISIBLE);
-            firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    //We take users to the AddJournalActivity
-                    currentUser = firebaseAuth.getCurrentUser();
-                    assert currentUser != null;
-                    String currentUserId = currentUser.getUid();
-
-                    //Creating user Map to be added to collection
-                    Map<String, String> userObj = new HashMap<>();
-                    userObj.put("userId", currentUserId);
-                    userObj.put("username", usernameText);
-
-                    //Save to firestore
-                    collectionReference.add(userObj).addOnSuccessListener(documentReference -> {
-                        documentReference.get().addOnCompleteListener(task1 -> {
-                            if (Objects.requireNonNull(task1.getResult()).exists()) {
-                                progressBar.setVisibility(View.INVISIBLE);
-                                String name = task1.getResult().getString("username");
-
-                                currentUserViewModel.setUsername(name);
-                                currentUserViewModel.setUserId(currentUserId);
-                                Intent intent = new Intent(SignupActivity.this, HostMenuActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Log.e(TAG, "Could not get result from document reference");
-                            }
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }).addOnFailureListener(e -> {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Log.e(TAG, "Could not get the document reference");
-                        });
-                    }).addOnFailureListener(e -> {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Log.e(TAG, "Could not add user object to the collection reference");
-                    });
-                } else {
-                    //Something went on
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Log.e(TAG, "Create user task was not successful");
-                }
-            }).addOnFailureListener(e -> {
+            authentificationUseCase.createUserEmailAccount(currentUserViewModel, emailText, passwordText, usernameText).addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.INVISIBLE);
-                Log.e(TAG, "Could not create user with email and password");
+                if (task.getResult().getUser() != null) {
+                    startActivity(new Intent(SignupActivity.this, HostMenuActivity.class));
+                    finish();
+                }
             });
+
         } else {
             Toast.makeText(SignupActivity.this, "Fields can't be empty", Toast.LENGTH_SHORT).show();
         }
