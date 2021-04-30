@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signinEmailPasswordUser(String email, String password) {
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             progressBar.setVisibility(View.VISIBLE);
-            authentificationUseCase.signinEmailPasswordUser(currentUserViewModel, email, password).addOnCompleteListener(task -> {
+            authentificationUseCase.signinEmailPasswordUser(this, currentUserViewModel, email, password).addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (task.getResult().getUser() != null) {
                     startActivity(new Intent(LoginActivity.this, HostMenuActivity.class));

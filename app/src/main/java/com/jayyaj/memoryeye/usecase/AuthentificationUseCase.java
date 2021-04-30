@@ -2,6 +2,8 @@ package com.jayyaj.memoryeye.usecase;
 
 import android.util.Log;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +54,7 @@ public class AuthentificationUseCase {
         return authStateListener;
     }
 
-    public Task<AuthResult> signinEmailPasswordUser(CurrentUserViewModel currentUserViewModel, String email, String password) {
+    public Task<AuthResult> signinEmailPasswordUser(LifecycleOwner owner, CurrentUserViewModel currentUserViewModel, String email, String password) {
         return firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (currentUser != null) {
@@ -68,6 +70,9 @@ public class AuthentificationUseCase {
                                     currentUserViewModel.setUsername(snapshot.getString("username"));
                                     currentUserViewModel.setUserId(currentUserId);
                                 }
+                                currentUserViewModel.getUsername().observe(owner, username -> {
+                                    Log.e(TAG, username);
+                                });
                             }
                         });
                 }

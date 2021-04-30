@@ -11,16 +11,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.jayyaj.memoryeye.model.Memory;
+import com.jayyaj.memoryeye.usecase.AuthentificationUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemoryRepository {
     private static final String TAG = "MemoryRepository";
+
     private static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private CollectionReference collectionReference = firebaseFirestore.collection("Memories");
 
+    private AuthentificationUseCase authentificationUseCase = new AuthentificationUseCase();
 //    public List<Memory> getAllMemories() {}
 //
 //    public Memory getMemory(String memoryId) {}
@@ -34,7 +37,7 @@ public class MemoryRepository {
               Log.d(TAG, "Count");
               StorageReference filePath = storageReference
                       .child("memory_image")
-                      .child(memory.getMemoryId() + "_img_" + Timestamp.now().getSeconds());
+                      .child(authentificationUseCase.getFirebaseAuth().getCurrentUser().getUid() + "_img_" + Timestamp.now().getSeconds());
 
               filePath.putFile(Uri.parse(imageUrl)).addOnSuccessListener(taskSnapshot -> {
                   filePath.getDownloadUrl().addOnSuccessListener(uri -> {

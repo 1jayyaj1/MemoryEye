@@ -7,34 +7,22 @@ import com.google.firebase.Timestamp;
 import java.util.List;
 
 public class Memory {
-    private String memoryId;
     private String title;
     private Timestamp date;
     private Type type;
     private String description;
-    private String username;
     private String userId;
     private List<String> imagesUrl;
 
     public Memory() {}
 
-    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String username, String userId, List<String> imagesUrl) {
-        this.memoryId = memoryId;
+    public Memory(String title, Timestamp date, Type type, String description, String userId, List<String> imagesUrl) {
         this.title = title;
         this.date = date;
         this.type = type;
         this.description = description;
-        this.username = username;
         this.userId = userId;
         this.imagesUrl = imagesUrl;
-    }
-
-    public String getMemoryId() {
-        return memoryId;
-    }
-
-    public void setMemoryId(String memoryId) {
-        this.memoryId = memoryId;
     }
 
     public String getTitle() {
@@ -67,14 +55,6 @@ public class Memory {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getUserId() {

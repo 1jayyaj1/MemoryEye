@@ -7,6 +7,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import com.jayyaj.memoryeye.R;
 import com.jayyaj.memoryeye.databinding.ActivityMemoryCreateBinding;
 import com.jayyaj.memoryeye.model.Memory;
 import com.jayyaj.memoryeye.model.Type;
+import com.jayyaj.memoryeye.usecase.AuthentificationUseCase;
 import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
 import com.jayyaj.memoryeye.viewmodel.MemoryViewModel;
 
@@ -31,10 +34,9 @@ public class MemoryCreateActivity extends AppCompatActivity {
     private ActivityMemoryCreateBinding binding;
     private List<String> imagesUrl;
 
-    private String username;
-    private String userId;
-
     private CurrentUserViewModel currentUserViewModel;
+
+    private AuthentificationUseCase authentificationUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,7 @@ public class MemoryCreateActivity extends AppCompatActivity {
                 .AndroidViewModelFactory(getApplication())
                 .create(CurrentUserViewModel.class);
 
-        currentUserViewModel.getUserId().observe(this, id -> {
-            userId = id;
-        });
-
-        currentUserViewModel.getUsername().observe(this, user -> {
-            username = user;
-        });
+        authentificationUseCase = new AuthentificationUseCase();
 
         memoryViewModel = new ViewModelProvider.AndroidViewModelFactory(
                 MemoryCreateActivity.this.getApplication())
@@ -75,10 +71,9 @@ public class MemoryCreateActivity extends AppCompatActivity {
                 Memory memory = new Memory();
                 memory.setTitle(binding.memoryTitle.getText().toString());
                 memory.setDate(new Timestamp(new Date()));
-                memory.setType(Type.PERSON);
+                memory.setType(convert(binding.memoryType.getCheckedRadioButtonId()));
                 memory.setDescription(binding.memoryDescription.getText().toString());
-                memory.setUsername(username);
-                memory.setUserId(userId);
+                memory.setUserId(authentificationUseCase.getFirebaseAuth().getUid());
                 memory.setImagesUrl(imagesUrl);
                 memoryViewModel.createMemory(memory);
             } else {
@@ -88,6 +83,13 @@ public class MemoryCreateActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    public Type convert(int checked) {
+        if (checked == binding.radioButtonObject.getId()) {
+            return Type.OBJECT;
+        }
+        return Type.PERSON;
     }
 
     @Override
