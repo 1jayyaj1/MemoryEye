@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         getStartedButton.setOnClickListener(v -> {
             if (hasPermission()) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             } else {
                 requestPermission();
             }
