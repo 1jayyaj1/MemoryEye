@@ -11,7 +11,6 @@
     <string name="activity_create_person">Person</string>
     <string name="activity_create_object">Object</string>
     <string name="activity_create_description">Description</string>
-    <string name="activity_create_creator">Creator</string>
     <string name="activity_create_button_text">Create</string>
     <string name="activity_create_image_text">Images</string>
     <string name="email_hint">Email</string>

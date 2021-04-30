@@ -71,19 +71,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/memoryType" />
 
-        <EditText
-            android:id="@+id/memoryCreator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:ems="10"
-            android:hint="@string/activity_create_creator"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/memoryDescription" />
-
         <Button
             android:id="@+id/memoryCreateButton"
             android:layout_width="wrap_content"
@@ -105,6 +92,6 @@
             android:text="@string/activity_create_image_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/memoryCreator" />
+            app:layout_constraintTop_toBottomOf="@+id/memoryDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

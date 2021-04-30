@@ -12,18 +12,20 @@ public class Memory {
     private Timestamp date;
     private Type type;
     private String description;
-    private String creator;
+    private String username;
+    private String userId;
     private List<String> imagesUrl;
 
     public Memory() {}
 
-    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String creator, List<String> imagesUrl) {
+    public Memory(String memoryId, String title, Timestamp date, Type type, String description, String username, String userId, List<String> imagesUrl) {
         this.memoryId = memoryId;
         this.title = title;
         this.date = date;
         this.type = type;
         this.description = description;
-        this.creator = creator;
+        this.username = username;
+        this.userId = userId;
         this.imagesUrl = imagesUrl;
     }
 
@@ -67,12 +69,20 @@ public class Memory {
         this.description = description;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public List<String> getImagesUrl() {
