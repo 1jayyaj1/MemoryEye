@@ -35,7 +35,6 @@ public class SignupActivity extends AppCompatActivity {
 
     private AuthentificationUseCase authentificationUseCase;
 
-    private static final String TAG = "SignupActivity";
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
@@ -70,11 +69,6 @@ public class SignupActivity extends AppCompatActivity {
 
         authStateListener = firebaseAuth -> {
             currentUser = firebaseAuth.getCurrentUser();
-            if (currentUser != null) {
-                //User is already logged in
-            } else {
-                //No users are logged in
-            }
         };
 
         signup.setOnClickListener(v -> {
@@ -97,7 +91,6 @@ public class SignupActivity extends AppCompatActivity {
                     finish();
                 }
             });
-
         } else {
             Toast.makeText(SignupActivity.this, "Fields can't be empty", Toast.LENGTH_SHORT).show();
         }

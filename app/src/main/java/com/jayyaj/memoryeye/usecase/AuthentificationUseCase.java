@@ -1,5 +1,7 @@
 package com.jayyaj.memoryeye.usecase;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,6 +16,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class AuthentificationUseCase {
+
+    private static final String TAG = "AuthentificationUseCase: ";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -31,15 +35,18 @@ public class AuthentificationUseCase {
             if (currentUser != null) {
                 String currentUserId = currentUser.getUid();
                 collectionReference.whereEqualTo("userId", currentUserId)
-                        .addSnapshotListener((queryDocumentSnapshots, error) -> {
-                            if (error != null) { return; }
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                    currentUserViewModel.setUsername(snapshot.getString("username"));
-                                    currentUserViewModel.setUserId(snapshot.getString("userId"));
-                                }
+                    .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                        if (error != null) {
+                            Log.e(TAG, "Could not find user");
+                            return;
+                        }
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                currentUserViewModel.setUsername(snapshot.getString("username"));
+                                currentUserViewModel.setUserId(snapshot.getString("userId"));
                             }
-                        });
+                        }
+                    });
             }
         };
         return authStateListener;
@@ -47,40 +54,39 @@ public class AuthentificationUseCase {
 
     public Task<AuthResult> signinEmailPasswordUser(CurrentUserViewModel currentUserViewModel, String email, String password) {
         return firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (currentUser != null) {
-                        String currentUserId = currentUser.getUid();
-                        collectionReference.whereEqualTo("userId", currentUserId)
-                            .addSnapshotListener((queryDocumentSnapshots, error) -> {
-                                if (error != null) {
+            .addOnCompleteListener(task -> {
+                if (currentUser != null) {
+                    String currentUserId = currentUser.getUid();
+                    collectionReference.whereEqualTo("userId", currentUserId)
+                        .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                            if (error != null) {
+                                Log.e(TAG, "Could not find user");
+                                return;
+                            }
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                    currentUserViewModel.setUsername(snapshot.getString("username"));
+                                    currentUserViewModel.setUserId(currentUserId);
                                 }
-                                assert queryDocumentSnapshots != null;
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        currentUserViewModel.setUsername(snapshot.getString("username"));
-                                        currentUserViewModel.setUserId(currentUserId);
-                                    }
-                                }
-                            });
-                    }
-                }).addOnFailureListener(e -> {
+                            }
+                        });
+                }
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Could not sign in with email and password");
         });
     }
 
     public Task<AuthResult> createUserEmailAccount(CurrentUserViewModel currentUserViewModel, String emailText, String passwordText, String usernameText) {
         return firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                //We take users to the AddJournalActivity
                 currentUser = firebaseAuth.getCurrentUser();
                 assert currentUser != null;
                 String currentUserId = currentUser.getUid();
 
-                //Creating user Map to be added to collection
                 Map<String, String> userObj = new HashMap<>();
                 userObj.put("userId", currentUserId);
                 userObj.put("username", usernameText);
 
-                //Save to firestore
                 collectionReference.add(userObj).addOnSuccessListener(documentReference -> {
                     documentReference.get().addOnCompleteListener(task1 -> {
                         if (Objects.requireNonNull(task1.getResult()).exists()) {
@@ -89,14 +95,19 @@ public class AuthentificationUseCase {
                             currentUserViewModel.setUsername(name);
                             currentUserViewModel.setUserId(currentUserId);
                         } else {
+                            Log.e(TAG, "Document reference contains an empty result");
                         }
                     }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Could not get document reference upon user creation");
                     });
                 }).addOnFailureListener(e -> {
+                    Log.e(TAG, "Could not add new user to collection reference");
                 });
             } else {
+                Log.e(TAG, "Create user task was not successful");
             }
         }).addOnFailureListener(e -> {
+            Log.e(TAG, "Could not create user with email and password");
         });
     }
 

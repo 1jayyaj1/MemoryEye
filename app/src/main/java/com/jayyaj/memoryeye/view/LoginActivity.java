@@ -10,18 +10,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.jayyaj.memoryeye.R;
 import com.jayyaj.memoryeye.usecase.AuthentificationUseCase;
 import com.jayyaj.memoryeye.viewmodel.CurrentUserViewModel;
@@ -57,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.loginProgress);
 
-
         signin.setOnClickListener(v -> {
             signinEmailPasswordUser(email.getText().toString().trim(), password.getText().toString().trim());
         });
@@ -68,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signinEmailPasswordUser(String email, String password) {
-        progressBar.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+            progressBar.setVisibility(View.VISIBLE);
             authentificationUseCase.signinEmailPasswordUser(currentUserViewModel, email, password).addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (task.getResult().getUser() != null) {
@@ -78,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
-            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this, "Please enter an email and a password", Toast.LENGTH_SHORT).show();
         }
     }
