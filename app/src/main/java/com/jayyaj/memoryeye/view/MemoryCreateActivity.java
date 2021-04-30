@@ -93,6 +93,7 @@ public class MemoryCreateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        imagesUrl.clear();
         if (data != null && requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data.getClipData() != null) {
                 for (int i = 0; i < data.getClipData().getItemCount(); i++) {
